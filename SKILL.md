@@ -24,7 +24,8 @@ Per-language mechanics: [references/languages.md](references/languages.md).
    build, and how to fake time. See `languages.md`; ask if not covered.
 3. Find the repo's commit style (CLAUDE.md, `docs/commit-style.md`, git log) and
    whether earlier labs exist (`git branch -a | rg lab`). If they do, read one
-   — match its wording and layout over this skill's templates.
+   — match its wording and layout over this skill's templates, except that
+   PREDICTION is always multiple choice, even if older labs used open questions.
 4. Write a plan (plan mode if active), terse:
    - **Context** — gap/spec, where the impl will land, the new mental models.
      Goal: drills only on this branch; real impl later.
@@ -48,8 +49,15 @@ Per-language mechanics: [references/languages.md](references/languages.md).
    it is not the lesson and lists every deliberate departure from real code.
 3. Drills, in the drill-file template. Each:
    - header: `ExN — <title> · budget M min [· DO NOT CUT]`, **Buys:**,
-     **PREDICTION** (≈3 concrete questions with numeric/yes-no answers; at
-     least one about the real codebase), empty **RESULT:**;
+     **PREDICTION** (≈3 multiple-choice questions, 3–4 options each, exactly
+     one correct, at least one about the real codebase), empty **RESULT:**;
+     - each wrong option is the answer a specific wrong mental model gives —
+       usually the trap's — never filler. For a numeric question, the options
+       are the numbers each model computes;
+     - put the correct option in a different place from one question to the
+       next, and leave out "all/none of the above";
+     - the drill file leaves every box `[ ]` empty. The student ticks `[x]`
+       before writing code;
    - one blank (two or three only when the primitive truly is a pair);
      contract as bullet doc; at most a one-line hint, never the answer;
    - a `main`/demo that prints measured numbers to check the prediction;
@@ -57,7 +65,9 @@ Per-language mechanics: [references/languages.md](references/languages.md).
      blank is filled, showing the failure; the rest grade the blank.
    - deterministic: fake/paused clock, fixed seeds, no real network.
 4. `solutions/exN_*` — worked version of every blank (full file), outside the
-   compiled tree.
+   compiled tree. Its PREDICTION block is the answer key: the correct box
+   ticked `[x]`, and a one-line `← <wrong model>` after every wrong option
+   naming the mistake that leads there.
 5. `README.md` and `CARD.md` from the templates.
 
 ## Phase 3 — Verify, then stop
@@ -65,7 +75,8 @@ Per-language mechanics: [references/languages.md](references/languages.md).
 - Each drill fails at its blank (red), and only there — no compile errors.
 - Copy the lab to the scratchpad, overlay `solutions/`, run all tests: all
   green. Report pass count.
-- Run each demo; numbers match the README/PREDICTION story.
+- Run each demo; numbers match the README/PREDICTION story, and every ticked
+  answer in `solutions/` is one a demo prints or a test asserts.
 - Main project build/test untouched.
 - Stop for review. Propose a commit message in the repo's style (fallback:
   `🏗️ test(tests): add <topic>-lab, <n> drills for <subject>`). Do not commit
@@ -76,6 +87,8 @@ Per-language mechanics: [references/languages.md](references/languages.md).
 - A drill without a named failure mode is a tutorial — cut it.
 - Trap first: the student should see the wrong answer pass before writing the
   right one.
+- A PREDICTION option nobody would pick teaches nothing. If you can't name
+  the misconception behind an option, replace the option.
 - Assert messages are the teaching. `"expected 390ms"` is weak;
   `"(90×100ms + 10×3s)/100 — the failures' own 1ms is thrown away"` is the bar.
 - Mirror the real codebase's vocabulary so the lab maps 1:1 onto the later impl.

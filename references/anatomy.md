@@ -45,7 +45,10 @@ function is the primitive.
 
 Two rules:
 
-1. The `PREDICTION` block is written **before** the code. Every time.
+1. Tick one box per `PREDICTION` question **before** the code. Every time.
+   Check them after the run: the demo and the asserts give the answers, and
+   the header of `solutions/exN_*` has the key, with the wrong model behind
+   each wrong option. Read the header, not the code below it.
 2. Buzzer beats perfection. At the budget (in each file's header), write the
    `RESULT` block and move on — a drill that ended in a surprise is worth more
    than one polished into agreement.
@@ -112,14 +115,24 @@ One deliberate departure from `<src>/`: <what + which drill needs it>.
 //! Buys: <what the real impl gets by knowing this — and the failure it avoids,
 //! stated concretely with numbers>.
 //!
-//! PREDICTION (fill before you write code):
-//! - A fails every call in 2ms. B succeeds every call in 200ms. Which one does
-//!   ex1's `window_mean` rank first?
-//! - 90 calls OK at 100ms, 10 failed at 1ms, the penalty is 3s. Score?
-//! - `src/`'s `Snapshot` has `duration_micros_total` and nothing else on time.
-//!   Can this score be computed from it? What field does the impl have to add?
+//! PREDICTION (tick one box per question before you write code):
+//! 1. A fails every call in 2ms. B succeeds every call in 200ms. Which one
+//!    does ex1's `window_mean` rank first?
+//!    [ ] a) B
+//!    [ ] b) A
+//!    [ ] c) a tie: both are skipped as unhealthy
+//! 2. 90 calls OK at 100ms, 10 failed at 1ms, the penalty is 3s. Score?
+//!    [ ] a) 90.1ms
+//!    [ ] b) 100ms
+//!    [ ] c) 390.1ms
+//!    [ ] d) 390ms
+//! 3. `src/`'s `Snapshot` has `duration_micros_total` and nothing else on
+//!    time. Can this score be computed from it?
+//!    [ ] a) No: it also needs a failure count and the successes' own total
+//!    [ ] b) Yes, as it is
+//!    [ ] c) No: it needs a per-call histogram
 //!
-//! RESULT:
+//! RESULT (which you missed, and the wrong model that picked it):
 //! -
 //!
 //! Assert: see the tests. Run them red first and read the messages.
@@ -164,6 +177,22 @@ mod tests {
 ```
 
 Test names are sentences stating the property. 3–5 tests per drill.
+
+The same header in `solutions/ex3_*` is the answer key. Tick the right box,
+and after each wrong option write the mistake that leads to it:
+
+```rust
+//! 1. A fails every call in 2ms. B succeeds every call in 200ms. Which one
+//!    does ex1's `window_mean` rank first?
+//!    [ ] a) B                               ← assumes the mean skips failures
+//!    [x] b) A
+//!    [ ] c) a tie: both are skipped         ← nothing in ex1 filters by health
+//! 2. 90 calls OK at 100ms, 10 failed at 1ms, the penalty is 3s. Score?
+//!    [ ] a) 90.1ms                          ← plain mean, failures count as fast
+//!    [ ] b) 100ms                           ← failures dropped, not penalised
+//!    [ ] c) 390.1ms                         ← penalty added on top of the 1ms
+//!    [x] d) 390ms
+```
 
 ## Plan drills table (Phase 1)
 

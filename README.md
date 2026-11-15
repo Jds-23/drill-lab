@@ -55,7 +55,7 @@ Every drill file has the same shape:
 
 - **GIVEN:** fakes, counters, fake clock, and every assert. Assert messages explain what a failure *means*. Tests marked "GIVEN, the trap" already pass and show the bug.
 - **BLANK:** one function with signature and contract, body left as `todo!()` / `throw new Error(...)` / `NotImplementedError` / `panic(...)`.
-- **PREDICTION:** about three concrete questions you answer *before* coding. Then a **RESULT** block you fill in after.
+- **PREDICTION:** about three multiple-choice questions you tick *before* coding. Each wrong option is the answer a specific wrong mental model gives. The header of the drill's `solutions/` file is the answer key, with the reason behind each wrong option. Then a **RESULT** block you fill in after: what you missed, and why.
 
 Rust example (the generated lab README lists commands for your language):
 
